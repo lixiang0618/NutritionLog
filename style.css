@@ -1,0 +1,213 @@
+/* 卡片玻璃拟态效果 */
+.card-glass {
+  backdrop-filter: blur(8px) saturate(120%);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px 0 rgba(255, 167, 38, 0.15);
+  border: 1.5px solid rgba(255, 167, 38, 0.12);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+/* 橙色按钮自定义样式 */
+.btn-orange {
+  background: linear-gradient(90deg, #ffa726 60%, #ff9800 100%);
+  box-shadow: 0 0 16px 4px #ffa72655, 0 4px 16px 0 rgba(255, 167, 38, 0.18);
+  letter-spacing: 0.05em;
+  position: relative;
+  z-index: 1;
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+.btn-orange::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 32px 8px #ffa72655;
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.btn-orange:hover {
+  background: linear-gradient(90deg, #ff9800 60%, #ffa726 100%);
+  box-shadow: 0 0 32px 12px #ffa726cc, 0 8px 24px 0 #ffa72644;
+}
+.btn-orange:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+/* 动画效果 */
+@keyframes countUp {
+  0% { opacity: 0.5; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-count {
+  animation: countUp 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 2.5s linear infinite;
+}
+
+/* 控制面板酷炫动效 */
+.animate-pulse-slow {
+  animation: pulseGlow 2.5s infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 32px 8px #ffa72655, 0 8px 32px 0 #ffa72622; }
+  50% { box-shadow: 0 0 48px 16px #ffa726cc, 0 16px 48px 0 #ffa72644; }
+}
+
+/* 控制面板浮动动画 */
+.panel-float {
+  animation: floatPanel 3s ease-in-out infinite;
+}
+@keyframes floatPanel {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px) scale(1.02); }
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .card-glass {
+    margin-bottom: 1rem;
+  }
+}
+
+/* 多彩融合按钮 */
+.btn-fusion {
+  background: linear-gradient(100deg, #ffa726 0%, #ffb74d 60%, #ff7043 100%);
+  box-shadow: 0 0 24px 6px #ffa72655, 0 4px 24px 0 #42a5f544, 0 0 32px 8px #ef535044;
+  letter-spacing: 0.08em;
+  border: none;
+  position: relative;
+  z-index: 1;
+  transition: box-shadow 0.3s, transform 0.2s, background 0.3s;
+  overflow: hidden;
+}
+.btn-fusion::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 60% 40%, #fff7e6 0%, #ffa72622 60%, transparent 100%);
+  opacity: 0.18;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.btn-fusion:hover {
+  background: linear-gradient(100deg, #42a5f5 0%, #ffa726 60%, #ef5350 100%);
+  box-shadow: 0 0 48px 16px #42a5f5cc, 0 8px 32px 0 #ffa72644, 0 0 48px 16px #ef5350cc;
+}
+.btn-fusion:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+/* 卡片图标 hover 动画平滑 */
+.card-glass .rounded-full {
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* 图表区域 hover 动效 */
+.chart-panel {
+  transition: box-shadow 0.4s, transform 0.4s;
+}
+.chart-panel:hover {
+  box-shadow: 0 12px 48px 0 #ffa72655, 0 2px 16px 0 #ff704344;
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* 炫酷橙色按钮 */
+.btn-cool-orange {
+  background: none;
+  position: relative;
+  z-index: 1;
+  border: none;
+  box-shadow: 0 4px 24px 0 #ffa72655, 0 2px 8px 0 #ff980044;
+  overflow: hidden;
+}
+.btn-cool-orange span.z-10, .btn-cool-orange svg {
+  position: relative;
+}
+.btn-cool-orange:hover {
+  box-shadow: 0 8px 32px 0 #ffa72699, 0 4px 16px 0 #ff980077;
+}
+.btn-cool-orange:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+/* 炫酷绿色按钮 */
+.btn-cool-green {
+  background: none;
+  position: relative;
+  z-index: 1;
+  border: none;
+  box-shadow: 0 4px 24px 0 #43e97b55, 0 2px 8px 0 #38f9d744;
+  overflow: hidden;
+}
+.btn-cool-green span.z-10, .btn-cool-green svg {
+  position: relative;
+}
+.btn-cool-green:hover {
+  box-shadow: 0 8px 32px 0 #43e97b99, 0 4px 16px 0 #38f9d777;
+}
+.btn-cool-green:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+/* 炫酷蓝绿色按钮 */
+.btn-cool-bluegreen {
+  background: none;
+  position: relative;
+  z-index: 1;
+  border: none;
+  box-shadow: 0 4px 24px 0 #38f9d755, 0 2px 8px 0 #185a9d44;
+  overflow: hidden;
+}
+.btn-cool-bluegreen span.z-10, .btn-cool-bluegreen svg {
+  position: relative;
+}
+.btn-cool-bluegreen:hover {
+  box-shadow: 0 8px 32px 0 #38f9d799, 0 4px 16px 0 #185a9d77;
+}
+.btn-cool-bluegreen:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+/* 按钮图标动效 */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-8deg); }
+  20% { transform: rotate(8deg); }
+  40% { transform: rotate(-6deg); }
+  60% { transform: rotate(6deg); }
+  80% { transform: rotate(-4deg); }
+}
+.animate-wiggle {
+  animation: wiggle 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes runner {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(6px) scale(1.1); }
+  40% { transform: translateX(-4px) scale(0.95); }
+  60% { transform: translateX(4px) scale(1.05); }
+  80% { transform: translateX(-2px) scale(1); }
+  100% { transform: translateX(0); }
+}
+.animate-runner {
+  animation: runner 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* 卡片图标只在卡片 hover 时 bounce */
+.card-glass:hover .rounded-full {
+  animation: bounce 1s;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-8px); }
+  40% { transform: translateY(-16px); }
+  60% { transform: translateY(-8px); }
+  80% { transform: translateY(-4px); }
+} 

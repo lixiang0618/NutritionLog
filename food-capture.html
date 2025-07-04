@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>食物识别与营养分析 - AIoT健康</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-orange-100 to-orange-50 min-h-screen font-sans">
+  <header class="w-full py-6 bg-white/80 shadow-lg mb-6 flex items-center justify-between px-8">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-[#ffa726] tracking-widest">食物识别与营养分析</h1>
+    <a href="index.html" class="text-[#ffa726] font-bold hover:underline">返回首页</a>
+  </header>
+  <main class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-stretch px-4">
+    <!-- 左侧：食物图片上传/展示 -->
+    <section class="flex-1 flex flex-col items-center gap-6 bg-white/80 rounded-2xl shadow-2xl p-8 min-h-[420px] justify-center animate-fadein">
+      <div id="upload-area" class="relative w-56 h-56 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl flex items-center justify-center overflow-hidden mb-4 border-2 border-dashed border-[#ffa726] shadow-lg upload-glow group transition-all duration-300 cursor-pointer" tabindex="0">
+        <img id="food-img" src="" alt="食物图片" class="object-cover w-full h-full transition-transform duration-500 hover:scale-105 rounded-2xl border-4 border-transparent group-has-[.uploaded]:border-[#ffa726] hidden" />
+        <div id="ai-svg-icon" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300 select-none">
+          <svg class="w-20 h-20 text-[#ffa726]/80 drop-shadow-lg mb-10" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 48 48">
+            <rect x="6" y="10" width="36" height="28" rx="6" fill="#fff8f1" stroke="#ffa726" stroke-width="2"/>
+            <circle cx="24" cy="24" r="8" fill="#ffa726" fill-opacity="0.18" stroke="#ffa726" stroke-width="2"/>
+            <circle cx="24" cy="24" r="4.5" fill="#ffa726" stroke="#ffa726" stroke-width="1.5"/>
+            <rect x="14" y="6" width="4" height="8" rx="2" fill="#ffa726"/>
+            <rect x="30" y="6" width="4" height="8" rx="2" fill="#ffa726"/>
+          </svg>
+          <span class="text-[#ffa726] text-base font-bold tracking-wide mt-6">AI智能识别</span>
+        </div>
+        <div id="upload-hint" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300">
+          <!-- <svg class="w-16 h-16 text-[#ffa726]/70 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 17v-6m0 0-2.5 2.5M12 11l2.5 2.5M4 17V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>
+          </svg> -->
+          <span class="text-[#ffa726] text-sm font-semibold">点击或拖拽图片到此处</span>
+        </div>
+        <button id="delete-img-btn" class="hidden absolute top-2 right-2 z-10 bg-white/80 hover:bg-[#ffa726] hover:text-white text-[#ffa726] rounded-full p-1 shadow transition-all" title="删除图片">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div id="ai-dots" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+          <span class="w-2 h-2 rounded-full bg-[#ffa726] opacity-60 animate-ai-dot"></span>
+          <span class="w-2 h-2 rounded-full bg-[#ffa726] opacity-40 animate-ai-dot delay-150"></span>
+          <span class="w-2 h-2 rounded-full bg-[#ffa726] opacity-30 animate-ai-dot delay-300"></span>
+        </div>
+      </div>
+      <div id="file-info" class="mt-2 text-xs text-gray-500 h-4"></div>
+      <div class="flex items-center w-40 my-2">
+        <div class="flex-1 h-px bg-orange-200"></div>
+        <span class="mx-2 text-orange-300 text-xs font-bold">或</span>
+        <div class="flex-1 h-px bg-orange-200"></div>
+      </div>
+      <div class="flex gap-6 w-full justify-center mt-2">
+        <label class="relative inline-block cursor-pointer flex-1 max-w-[200px]">
+          <input type="file" accept="image/*" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" onchange="previewFoodImg(event)">
+          <span class="flex items-center justify-center gap-3 w-full py-3 rounded-2xl bg-gradient-to-tr from-[#ffa726] to-[#ffb347] text-white font-extrabold shadow-xl hover:scale-105 active:scale-95 transition-all text-lg tracking-wide">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-8m0 0-3 3m3-3 3 3"/><rect x="4" y="4" width="16" height="16" rx="4"/></svg>
+            拍摄图片
+          </span>
+        </label>
+        <button class="flex-1 max-w-[200px] flex items-center justify-center gap-3 py-3 rounded-2xl bg-gradient-to-tr from-[#42a5f5] to-[#1976d2] text-white font-extrabold shadow-xl hover:scale-105 active:scale-95 transition-all text-lg tracking-wide" onclick="alert('TODO: 对接视频识别接口 /api/food-video')">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M4 6h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg>
+          视频识别
+        </button>
+      </div>
+      <!-- 操作提示已集成在上传区和按钮，无需API注释 -->
+    </section>
+    <!-- 右侧：识别结果与建议 -->
+    <section class="flex-1 flex flex-col gap-6 bg-white/90 rounded-2xl shadow-2xl p-8 min-h-[420px] justify-center animate-fadein">
+      <h2 class="text-xl font-bold text-[#ffa726] mb-2 tracking-wide">识别结果</h2>
+      <div class="grid grid-cols-2 gap-6 mb-2">
+        <div class="flex flex-col items-center rounded-xl shadow bg-gradient-to-br from-[#fff3e0] to-[#ffe0b2] p-4">
+          <div class="flex items-center justify-center gap-1 mb-1">
+            <span class="text-2xl" role="img" aria-label="fire">🔥</span>
+            <span class="text-[#fb8c00] font-bold">热量</span>
+          </div>
+          <div class="relative flex flex-col items-center justify-center">
+            <span class="absolute w-20 h-16 rounded-full bg-[#fb8c00]/40 blur-[2px]"></span>
+            <span class="relative text-5xl font-extrabold text-[#fb8c00] animate-count-super"
+                  style="-webkit-text-stroke: 2px #fff; text-shadow: 0 2px 8px #fb8c00, 0 0 8px #fff;">
+              520
+            </span>
+            <span class="block w-8 h-1 bg-[#fb8c00] rounded-full mt-2"></span>
+          </div>
+          <div class="text-sm text-gray-400 mt-1">kcal</div>
+        </div>
+        <div class="flex flex-col items-center rounded-xl shadow bg-gradient-to-br from-[#e3f2fd] to-[#bbdefb] p-4">
+          <div class="flex items-center justify-center gap-1 mb-1">
+            <span class="text-2xl" role="img" aria-label="carb">🍞</span>
+            <span class="text-[#1976d2] font-bold">碳水</span>
+          </div>
+          <div class="relative flex flex-col items-center justify-center">
+            <span class="absolute w-20 h-16 rounded-full bg-[#1976d2]/40 blur-[2px]"></span>
+            <span class="relative text-5xl font-extrabold text-[#1976d2] animate-count-super"
+                  style="-webkit-text-stroke: 2px #fff; text-shadow: 0 2px 8px #1976d2, 0 0 8px #fff;">
+              68
+            </span>
+            <span class="block w-8 h-1 bg-[#1976d2] rounded-full mt-2"></span>
+          </div>
+          <div class="text-sm text-gray-400 mt-1">g</div>
+        </div>
+        <div class="flex flex-col items-center rounded-xl shadow bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] p-4">
+          <div class="flex items-center justify-center gap-1 mb-1">
+            <span class="text-2xl" role="img" aria-label="protein">💪</span>
+            <span class="text-[#388e3c] font-bold">蛋白质</span>
+          </div>
+          <div class="relative flex flex-col items-center justify-center">
+            <span class="absolute w-20 h-16 rounded-full bg-[#388e3c]/40 blur-[2px]"></span>
+            <span class="relative text-5xl font-extrabold text-[#388e3c] animate-count-super"
+                  style="-webkit-text-stroke: 2px #fff; text-shadow: 0 2px 8px #388e3c, 0 0 8px #fff;">
+              18
+            </span>
+            <span class="block w-8 h-1 bg-[#388e3c] rounded-full mt-2"></span>
+          </div>
+          <div class="text-sm text-gray-400 mt-1">g</div>
+        </div>
+        <div class="flex flex-col items-center rounded-xl shadow bg-gradient-to-br from-[#ffebee] to-[#ffcdd2] p-4">
+          <div class="flex items-center justify-center gap-1 mb-1">
+            <span class="text-2xl" role="img" aria-label="fat">🫒</span>
+            <span class="text-[#c62828] font-bold">脂肪</span>
+          </div>
+          <div class="relative flex flex-col items-center justify-center">
+            <span class="absolute w-20 h-16 rounded-full bg-[#c62828]/40 blur-[2px]"></span>
+            <span class="relative text-5xl font-extrabold text-[#c62828] animate-count-super"
+                  style="-webkit-text-stroke: 2px #fff; text-shadow: 0 2px 8px #c62828, 0 0 8px #fff;">
+              12
+            </span>
+            <span class="block w-8 h-1 bg-[#c62828] rounded-full mt-2"></span>
+          </div>
+          <div class="text-sm text-gray-400 mt-1">g</div>
+        </div>
+      </div>
+      <!-- TODO: 识别结果后续对接 /api/food-detect 返回的 json -->
+      <div class="mt-2">
+        <h3 class="text-lg font-bold text-[#ffa726] mb-1">膳食建议</h3>
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 border-l-4 border-[#ffa726] p-4 rounded-xl text-gray-700 shadow animate-fadein-slow">
+          <ul class="list-disc pl-5 text-base">
+            <li>本餐热量适中，碳水略高，建议适量减少主食摄入。</li>
+            <li>蛋白质含量良好，有助于维持肌肉健康。</li>
+            <li>脂肪摄入适中，建议搭配新鲜蔬菜增加膳食纤维。</li>
+          </ul>
+          <!-- TODO: 膳食建议后续对接 /api/food-advice?nutrient=xxx -->
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    // 预览上传图片
+    function previewFoodImg(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        document.getElementById('food-img').src = ev.target.result;
+        document.getElementById('food-img').classList.add('uploaded');
+        document.getElementById('food-img').classList.remove('hidden');
+        document.getElementById('ai-svg-icon').style.opacity = 0;
+        document.getElementById('upload-hint').style.opacity = 0;
+        document.getElementById('delete-img-btn').style.display = 'block';
+        document.getElementById('file-info').textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+      };
+      reader.readAsDataURL(file);
+    }
+    // 删除图片
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('delete-img-btn').onclick = function() {
+        document.getElementById('food-img').src = '';
+        document.getElementById('food-img').classList.remove('uploaded');
+        document.getElementById('food-img').classList.add('hidden');
+        document.getElementById('ai-svg-icon').style.opacity = 1;
+        document.getElementById('upload-hint').style.opacity = 1;
+        this.style.display = 'none';
+        document.getElementById('file-info').textContent = '';
+      };
+    });
+    // 拖拽上传功能
+    const uploadArea = document.getElementById('upload-area');
+    uploadArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      uploadArea.classList.add('ring-4', 'ring-[#ffa726]/40');
+    });
+    uploadArea.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      uploadArea.classList.remove('ring-4', 'ring-[#ffa726]/40');
+    });
+    uploadArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      uploadArea.classList.remove('ring-4', 'ring-[#ffa726]/40');
+      const files = e.dataTransfer.files;
+      if (files && files[0]) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(ev) { previewFoodImg({ target: { files } }); };
+        input.files = files;
+        // 直接调用预览
+        previewFoodImg({ target: { files } });
+      }
+    });
+    // 点击上传区也可触发文件选择
+    uploadArea.addEventListener('click', function() {
+      const fileInput = uploadArea.parentElement.querySelector('input[type=file]');
+      if (fileInput) fileInput.click();
+    });
+  </script>
+  <style>
+    @keyframes countSuper {
+      0% { opacity: 0; transform: scale(0.6) rotate(-10deg);}
+      60% { opacity: 1; transform: scale(1.15) rotate(2deg);}
+      100% { opacity: 1; transform: scale(1) rotate(0);}
+    }
+    .animate-count-super {
+      animation: countSuper 1s cubic-bezier(0.4,0,0.2,1);
+    }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadein {
+      animation: fadein 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+    .animate-fadein-slow {
+      animation: fadein 1.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 0 0 #ffa72644; }
+      50% { box-shadow: 0 0 24px 8px #ffa72688; }
+    }
+    .upload-glow {
+      animation: glow 2s infinite;
+    }
+    @keyframes ai-dot {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+    .animate-ai-dot {
+      animation: ai-dot 1.2s infinite;
+    }
+  </style>
+</body>
+</html> 
